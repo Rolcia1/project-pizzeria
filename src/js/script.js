@@ -61,6 +61,8 @@
       thisProduct.renderInMenu();
       thisProduct.getElements();
       thisProduct.initAccordion();
+      thisProduct.initOrderForm();
+      thisProduct.processOrder();
 
       console.log('new Product:', thisProduct);
     }
@@ -159,6 +161,20 @@
           // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
           const option = param.options[optionId];
           console.log(optionId, option);
+
+          // sprawdź, czy istnieje parametr o nazwie paramId w formData i czy zawiera on optionId - check if there is param with a name of paramId in formData and if it includes optionId
+          if(formData[paramId] && formData[paramId].includes(optionId)) {
+            // sprawdź, czy opcja nie jest domyślna - 
+            if(!option.default == true) {
+              // dodaj cenę opcji do zmiennej ceny - add option price to price variable
+              price = price + option.price;
+            }
+          } else {
+            // sprawdź, czy opcja jest domyślna - check if the option is default
+            if(option.default == true) {
+              // zmniejsz zmienną ceny - reduce price variable
+              price = price - option.price;
+          }
         }
       }
     
@@ -169,7 +185,7 @@
 
   }
 
-
+}
 
   const app = {
     initMenu: function(){
@@ -198,6 +214,7 @@
 
       thisApp.initData();
       thisApp.initMenu();
+
     },
   };
   
