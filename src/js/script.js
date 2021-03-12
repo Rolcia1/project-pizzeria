@@ -90,6 +90,7 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
 
     initAccordion(){
@@ -161,9 +162,11 @@
           // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
           const option = param.options[optionId];
           console.log(optionId, option);
+          const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
 
           // sprawdź, czy istnieje parametr o nazwie paramId w formData i czy zawiera on optionId - check if there is param with a name of paramId in formData and if it includes optionId
-          if(formData[paramId] && formData[paramId].includes(optionId)) {
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId); 
+          if(optionSelected) {
             // sprawdź, czy opcja nie jest domyślna - 
             if(!option.default == true) {
               // dodaj cenę opcji do zmiennej ceny - add option price to price variable
@@ -174,7 +177,14 @@
             if(option.default == true) {
               // zmniejsz zmienną ceny - reduce price variable
               price = price - option.price;
+            }
           }
+          if(optionImage) {
+            if(optionSelected) {
+              optionImage.classList.add(classNames.menuProduct.imageVisible);
+            } else if(!optionSelected){
+              optionImage.classList.remove(classNames.menuProduct.imageVisible);
+            }
         }
       }
     
