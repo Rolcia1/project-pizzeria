@@ -224,7 +224,7 @@
 
     setValue(value) {
       const thisWidget = this;
-      const newValue = parseId(value);
+      const newValue = parseInt(value);
 
       /*TODO: Add validation */
       if (thisWidget.value !== newValue && !isNaN(newValue)) {
