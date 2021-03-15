@@ -212,13 +212,13 @@
           const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
           if (optionSelected) {
             // sprawdź, czy opcja nie jest domyślna - 
-            if (!option.default == true) {
+            if (!option.default) {
               // dodaj cenę opcji do zmiennej ceny - add option price to price variable
               price = price + option.price;
             }
           } else {
             // sprawdź, czy opcja jest domyślna - check if the option is default
-            if (option.default == true) {
+            if (option.default) {
               // zmniejsz zmienną ceny - reduce price variable
               price = price - option.price;
             }
@@ -231,11 +231,12 @@
             }
           }
         }
-        /* multiply price by amount */
-        price *= thisProduct.amountWidget.value;
-        // update calculated price in the HTML
-        thisProduct.priceElem.innerHTML = price;
+
       }
+    /* multiply price by amount */
+    price *= thisProduct.amountWidget.value;
+    // update calculated price in the HTML
+    thisProduct.priceElem.innerHTML = price;
     }
 
   }
@@ -267,10 +268,9 @@
       /*TODO: Add validation */
       if (thisWidget.value !== newValue && !isNaN(newValue) && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax) {
         thisWidget.value = newValue;
+        thisWidget.input.value = thisWidget.value;
+        thisWidget.annouce();
       }
-      thisWidget.input.value = thisWidget.value;
-      thisWidget.annouce();
-      
     }
 
     initActions() {
