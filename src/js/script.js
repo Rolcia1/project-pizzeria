@@ -269,7 +269,7 @@
 
       // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
       const formData = utils.serializeFormToObject(thisProduct.form);
-      const paramas = {};
+      const params = {};
       // for very category (param)
       for(let paramId in thisProduct.data.params) {
         const param = thisProduct.data.params[paramId];
@@ -386,12 +386,11 @@
 
 
     add(menuProduct){
-      // const thisCart = this;
+      const thisCart = this;
       console.log('adding product', menuProduct);
       const generatedHTML = templates.cartProduct(menuProduct);
-      thisCart.element = utils.createDOMFromHTML(generatedHTML);
-      const generatedDOM = 
-      genertedDOM.appendChild(menuProduct.element);
+      const generatedDOM = utils.createDOMFromHTML(generatedHTML);
+      thisCart.dom.productList.appendChild(generatedDOM);
     }
   }
 
