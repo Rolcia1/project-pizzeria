@@ -373,6 +373,11 @@
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
       thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
+      
+      thisCart.dom.deliveryFee = thisCart.dom.wrapper.querySelector(select.cart.deliveryFee);
+      thisCart.dom.subTotalPrice = thisCart.dom.wrapper.querySelector(select.cart.subTotalPrice);
+      thisCart.dom.totalPrice = thisCart.dom.wrapper.querySelector(select.cart.totalPrice);
+      thisCart.dom.totalNumber = thisCart.dom.wrapper.querySelector(select.cart.totalNumber);
 
     }
      
@@ -392,19 +397,84 @@
       const generatedDOM = utils.createDOMFromHTML(generatedHTML);
       thisCart.dom.productList.appendChild(generatedDOM);
 
-      thisCart.products.push(menuProduct);
+      thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
       console.log('thisCart.products', thisCart.products);
+
+      thisCart.update();
     }
+
+    update(){
+      const thisCart = this;
+
+      thisCart.deliveryFee =  settings.cart.defaultDeliveryFee;
+      thisCart.totalNumber = [0];
+      thisCart.subTotalPrice = [0];
+
+      for(let product of thisCart.products){
+        thisCart.totalNumber += product.amount; 
+        thisCart.subTotalPrice += product.price;
+      }
+
+      if (thisCart.subTotalPrice > 0){
+        thisCart.totalPrice = thisCart.subtotalPrice + thisCart.deliveryFee;
+      }
+      else{
+        thisCart.totalPrice = 0;
+        thisCart.deliveryFee =0;
+      }
+
+    thisCart.dom.deliveryFee.innerHTML =thisCart.deliveryFee;
+      for(let elem of thisCart.dom.totalPrice){
+        elem.innerHTML = thisCart.totalPrice;
+      }
+
+    thisCart.dom.subTotalPrice.innerHTML = thisCart.subTotalPrice;
+    thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
+
+
+    }
+
   }
 
-  // class CartProduct{
-  //   constructor(menuProduct, element){
-  //     const thisCartProduct = this;
-  //     thisCartProduct.id = menuProduct.id;
-      
-  //   }
+  class CartProduct{
+    constructor(menuProduct, element){
+      const thisCartProduct = this;
+      thisCartProduct.id = menuProduct.id;
+      thisCartProduct.name = menuProduct.name;
+      thisCartProduct.priceSingle = menuProduct.priceSingle;
+      thisCartProduct.price = menuProduct.price * menuProduct.amount;
+      thisCartProduct.amount = menuProduct.amount;
+      //console.log(thisCartProduct.amount);
+      thisCartProduct.inputValue = element.querySelector(select.widgets.amount.input);
 
-  // }
+      thisCartProduct.getElements(element);
+      thisCartProduct.initAmountWidget();
+
+    }
+
+    getElements(element){
+      const thisCartProduct = this;
+      thisCartProduct.dom = {};
+      thisCartProduct.dom.wrapper = element;
+      thisCartProduct.dom.amountWidget = element.querySelector(select.cartProduct.amountWidget);
+      thisCartProduct.dom.price = element.querySelector(select.cartProduct.price);
+      thisCartProduct.dom.edit = element.querySelector(select.cartProduct.edit);
+      thisCartProduct.dom.remove = element.querySelector(select.cartProduct.remove);
+    }
+
+    initAmountWidget() {
+      const thisCartProduct = this;
+
+      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidgetElem);
+      thisCartProduct.amountWidgetElem.addEventListener('updated', function(){
+        thisCartProduct.amount = thisCartProduct.amountWidget.value;
+        thisCartProduct.price = thisCartProduct.priceSingle * thisCartProduct.amountWidget.value;
+        thisCartProduct.dom.price.innerHTML = thisCartProduct.price;
+        thisCartProduct.inputValue.innerHTML = thisCartProduct.amount;
+      });
+    }
+    // Dlaczego CartProduct nie widać?
+   }
 
 
 
@@ -442,12 +512,15 @@
 
       thisApp.initData();
       thisApp.initMenu();
+    
 
     },
   };
 
   app.init();
   app.initCart();
+  
+  
 
 
 }
