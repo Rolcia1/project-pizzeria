@@ -6,11 +6,20 @@ import {
 } from './settings.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
-
+import Booking from './components/Booking.js';
 
 
 
 const app = {
+  initBooking: function() {
+    const thisBooking = this;
+    thisBooking.wrapper = document.querySelector(select.containerOf.booking);
+
+    thisBooking.booking = new Booking(thisBooking.wrapper);
+    
+  },
+  
+  
   initPages: function() {
     const thisApp = this;
 
@@ -30,20 +39,18 @@ const app = {
       }
     }
 
-    thisApp.activatePage(pageMatchingHash);
-
-    for(let link of thisApp.navLinks){
-      link.addEventListener('click', function(event){
+    for (let link of thisApp.navLinks) {
+      link.addEventListener('click', function (event) {
         const clickedElement = this;
         event.preventDefault();
 
-        /* get page id fron href attribute */
-        const id = clickedElement.getAttribute('href').repleace('#', '');
-        /* run thisApp.activatePage with that id */
+        /* get page id from href attribute */
+        const id = clickedElement.getAttribute('href').replace('#', '');
+        /* run thisApp.activawtePage with that id */
         thisApp.activatePage(id);
 
-        /* change URL hash */
-        window.location.has = '#/' + id;
+        /*change URL hash */
+        window.location.hash = '#/' + id;
 
       });
     }
@@ -122,6 +129,8 @@ const app = {
     thisApp.initPages();
 
     thisApp.initData();
+
+    thisApp.initBooking();
 
 
 
