@@ -1,48 +1,59 @@
-class BaseWidget{
-    constructor(wrapperElement, initialValue){
-        const thisWidget = this;
+class BaseWidget {
+  constructor(wrapperElement, initialValue) {
+    const thisWidget = this;
 
-        thisWidget.dom = {};
-        thisWidget.dom.wrapper = wrapperElement;
+    thisWidget.dom = {};
+    thisWidget.dom.wrapper = wrapperElement;
 
-        thisWidget.value = initialValue
-    }
+    thisWidget.correctValue = initialValue;
+  }
 
-    setValue(value) {
-        const thisWidget = this;
-        const newValue = thisWidget.parseInt(value);
-    
-        /*TODO: Add validation */
-        if (thisWidget.value !== newValue && !isNaN(newValue) && thisWidget.isValid(newValue)) {
-          thisWidget.value = newValue;
-          
-          thisWidget.annouce();
-        }
-        thisWidget.renderValue();
-    }
+  get value() {
+    const thisWidget = this;
 
-    parseValue(value){
-        return parseInt(value);
-    }
-    
-    isValid(value){
-        return !isNaN(value);
-    }
+    return thisWidget.correctValue;
+  }
 
-    renderValue(){
-        const thisWidget = this;
-    
-        thisWidget.dom.wrapper.innerHTML = thisWidget.value;
-    }
+  set value(value) {
+    const thisWidget = this;
+    const newValue = thisWidget.parseValue(value);
 
-    annouce() {
-        const thisWidget = this;
-    
-        const event = new Event('updated', {
-          bubbles: true
-        });
-        thisWidget.dom.wrapper.dispatchEvent(event);
+    /*TODO: Add validation */
+    if (thisWidget.correctValue !== newValue && !isNaN(newValue) && thisWidget.isValid(newValue)) {
+      thisWidget.correctValue = newValue;
+
+      thisWidget.annouce();
     }
+    thisWidget.renderValue();
+  }
+  setValue(value) {
+    const thisWidget = this;
+
+    thisWidget.value = value;
+  }
+
+  parseValue(value) {
+    return parseInt(value);
+  }
+
+  isValid(value) {
+    return !isNaN(value);
+  }
+
+  renderValue() {
+    const thisWidget = this;
+
+    thisWidget.dom.wrapper.innerHTML = thisWidget.value;
+  }
+
+  annouce() {
+    const thisWidget = this;
+
+    const event = new Event('updated', {
+      bubbles: true
+    });
+    thisWidget.dom.wrapper.dispatchEvent(event);
+  }
 
 }
 export default BaseWidget;
